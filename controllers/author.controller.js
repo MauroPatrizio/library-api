@@ -50,10 +50,28 @@ deleteAuthor = async (req, res) => {
 	}
 };
 
+addBookToAuthor = async (req, res) => {
+	try {
+		const author = res.author;
+		const bookId = req.params.bookId;
+
+		if (author.books.includes(bookId)) {
+			return res.status(400).json({ message: "El libro ya está asociado a este autor" });
+		}
+
+		author.books.push(bookId);
+		await author.save();
+		res.json(author);
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+};
+
 module.exports = {
 	getAuthors,
 	getAuthorById,
 	createAuthor,
 	updateAuthor,
 	deleteAuthor,
+	addBookToAuthor,
 };
